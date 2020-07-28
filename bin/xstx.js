@@ -7,7 +7,7 @@ const path = require('path')
 
 let allBinFile = path.join(__dirname, '../json/all.json')
 
-function runBin(bin, options) {
+function runBin(bin, options = {}) {
   let encoding = 'cp936'
   let binaryEncoding = 'binary'
 
@@ -23,14 +23,13 @@ function operationModeList() {
   return chooseList([
     { name: '新增快捷命令', value: 'add' },
     { name: '删除快捷命令', value: 'del' },
-    { name: '编辑快捷命令', value: '2' },
+    { name: '编辑快捷命令', value: 'edit' },
     { name: '执行快捷命令', value: 'run' }
   ], '请选择快捷命令库操作方式:')
     .then(answers => {
+      let binData = getBinData()
+      if (binData === false) return
       switch (answers.value) {
-        case 'run':
-          runBin('dir')
-          break;
         case 'add':
           console.log(chalk.gray('-----新增-----'))
           listInput([
@@ -38,13 +37,11 @@ function operationModeList() {
             { name: '命令内容:', value: "value" },
             { name: '命令参数:', value: "key" }
           ]).then(bin => {
-            let binData = getBinData()
             addBin(binData, bin)
           })
           break;
         case 'del':
           console.log(chalk.gray('-----删除-----'))
-          let binData = getBinData()
           let showBinData = binData.map(item => {
             item.name = `${item.title} | ${item.key} | ${item.value}`
             item.value = item
@@ -57,6 +54,14 @@ function operationModeList() {
             }
             delBin(binData, res.value)
           })
+          break;
+        case 'edit':
+          editContent(JSON.stringify(binData)).then(res => {
+            editBin(res.content)
+          })
+        case 'run':
+          runBin('dir')
+          break;
       }
     })
 }
@@ -93,8 +98,15 @@ function getBinData() {
   // 获取已存所有指令数据
   let binData = []
   let fileContent = fs.readFileSync(allBinFile, 'utf-8')
-  if (fileContent) {
+  try {
     binData = JSON.parse(fileContent)
+  } catch (error) {
+    console.log(chalk.red('-----json文件格式异常,请重新编辑！-----'))
+    if(fileContent.length <= 0) fileContent = '[]'
+    editContent(fileContent).then(res => {
+      editBin(res.content)
+    })
+    return false
   }
   return binData
 }
@@ -110,7 +122,7 @@ function addBin(binData = [], bin) {
     return
   }
   binData.push(bin)
-  let writeFs = fs.writeFileSync(allBinFile, JSON.stringify(binData))
+  fs.writeFileSync(allBinFile, JSON.stringify(binData))
   console.log(chalk.green(`新增成功!`))
 }
 
@@ -119,8 +131,22 @@ function delBin(binData = [], bin) {
   let newBinData = binData.filter(item => {
     return item.key !== bin.key && item.title !== bin.title
   })
-  let writeFs = fs.writeFileSync(allBinFile, JSON.stringify(newBinData))
+  fs.writeFileSync(allBinFile, JSON.stringify(newBinData))
   console.log(chalk.green(`删除成功!`))
+}
+
+function editBin(BinData = []) {
+  fs.writeFileSync(allBinFile, BinData)
+  console.log(chalk.green(`编辑成功!`))
+}
+
+function editContent(data) {
+  return inquirer.prompt([{
+    type: 'editor',
+    default: data,
+    message: '编辑命令',
+    name: 'content'
+  }])
 }
 
 module.exports = {
