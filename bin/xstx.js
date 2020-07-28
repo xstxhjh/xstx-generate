@@ -14,7 +14,7 @@ function runBin(bin, options = {}) {
   process.exec(bin, { ...options, encoding: binaryEncoding }, function (err, stdout, stderr) {
     let stdoutMsg = iconv.decode(Buffer.from(stdout, binaryEncoding), encoding)
     let stderrMsg = iconv.decode(Buffer.from(stderr, binaryEncoding), encoding)
-    console.log(stdoutMsg, stderrMsg)
+    console.log(stdoutMsg, stderrMsg, err)
   })
 }
 
@@ -34,15 +34,15 @@ function operationModeList() {
           console.log(chalk.gray('-----新增-----'))
           listInput([
             { name: '命令名称:', value: "title" },
-            { name: '命令内容:', value: "value" },
-            { name: '命令参数:', value: "key" }
+            { name: '系统命令:', value: "value" },
+            { name: '命令缩写:', value: "key" }
           ]).then(bin => {
             addBin(binData, bin)
           })
           break;
         case 'del':
           console.log(chalk.gray('-----删除-----'))
-          let showBinData = binData.map(item => {
+          binData.map(item => {
             item.name = `${item.title} | ${item.key} | ${item.value}`
             item.value = item
             return item
@@ -60,7 +60,17 @@ function operationModeList() {
             editBin(res.content)
           })
         case 'run':
-          runBin('dir')
+          binData.map(item=>{
+            item.name = `${item.title} | ${item.key} | ${item.value}`
+            return item
+          })
+          chooseList(binData, '请选择需要执行的指令:').then(res => {
+            if (res.value == 'cancel') {
+              operationModeList()
+              return
+            }
+            runBin(res.value)
+          })
           break;
       }
     })
