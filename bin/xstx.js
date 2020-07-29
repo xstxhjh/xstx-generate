@@ -23,8 +23,9 @@ function operationModeList() {
   return chooseList([
     { name: '新增快捷命令', value: 'add' },
     { name: '删除快捷命令', value: 'del' },
+    { name: '执行快捷命令', value: 'run' },
     { name: '编辑快捷命令', value: 'edit' },
-    { name: '执行快捷命令', value: 'run' }
+    { name: '编辑命令配置项', value: 'run' }
   ], '请选择快捷命令库操作方式:')
     .then(answers => {
       let binData = getBinData()
@@ -40,6 +41,7 @@ function operationModeList() {
             addBin(binData, bin)
           })
           break;
+          
         case 'del':
           console.log(chalk.gray('-----删除-----'))
           binData.map(item => {
@@ -55,10 +57,13 @@ function operationModeList() {
             delBin(binData, res.value)
           })
           break;
+
         case 'edit':
           editContent(JSON.stringify(binData)).then(res => {
             editBin(res.content)
           })
+          break;
+
         case 'run':
           binData.map(item=>{
             item.name = `${item.title} | ${item.key} | ${item.value}`
