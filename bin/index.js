@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 const { program } = require('commander');
-const chalk = require('chalk')
 const process = require('child_process');
 const package = require("../package.json");
 
@@ -29,4 +28,3 @@ binData.map(bin => {
 if(hasBin) return
 
 operationModeList()
-
