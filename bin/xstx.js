@@ -8,13 +8,18 @@ const path = require('path')
 let allBinFile = path.join(__dirname, '../json/all.json')
 
 function runBin(bin, options = {}) {
+  let opt = {
+    stdio: 'inherit',
+    ...options
+  }
   let encoding = 'cp936'
   let binaryEncoding = 'binary'
 
-  process.exec(bin, { ...options, encoding: binaryEncoding }, function (err, stdout, stderr) {
+  process.spawnSync(bin, { ...opt, encoding: binaryEncoding }, function (err, stdout, stderr) {
     let stdoutMsg = iconv.decode(Buffer.from(stdout, binaryEncoding), encoding)
     let stderrMsg = iconv.decode(Buffer.from(stderr, binaryEncoding), encoding)
-    console.log(stdoutMsg, stderrMsg, err)
+    console.log(stdoutMsg, stderrMsg)
+    if (err) console.log(err)
   })
 }
 
@@ -25,7 +30,7 @@ function operationModeList() {
     { name: '删除快捷命令', value: 'del' },
     { name: '执行快捷命令', value: 'run' },
     { name: '编辑快捷命令', value: 'edit' },
-    { name: '编辑命令配置项', value: 'run' }
+    { name: '编辑命令配置项', value: 'opt' }
   ], '请选择快捷命令库操作方式:')
     .then(answers => {
       let binData = getBinData()
@@ -41,7 +46,7 @@ function operationModeList() {
             addBin(binData, bin)
           })
           break;
-          
+
         case 'del':
           console.log(chalk.gray('-----删除-----'))
           binData.map(item => {
@@ -65,7 +70,7 @@ function operationModeList() {
           break;
 
         case 'run':
-          binData.map(item=>{
+          binData.map(item => {
             item.name = `${item.title} | ${item.key} | ${item.value}`
             return item
           })
@@ -117,7 +122,7 @@ function getBinData() {
     binData = JSON.parse(fileContent)
   } catch (error) {
     console.log(chalk.red('-----json文件格式异常,请重新编辑！-----'))
-    if(fileContent.length <= 0) fileContent = '[]'
+    if (fileContent.length <= 0) fileContent = '[]'
     editContent(fileContent).then(res => {
       editBin(res.content)
     })
@@ -165,5 +170,7 @@ function editContent(data) {
 }
 
 module.exports = {
-  operationModeList
+  operationModeList,
+  getBinData,
+  runBin
 }

@@ -5,25 +5,27 @@ const chalk = require('chalk')
 const process = require('child_process');
 const package = require("../package.json");
 
-let { operationModeList } = require('./xstx.js')
+let { operationModeList, getBinData, runBin } = require('./xstx.js');
 
-program.version(`当前 ${package.name} 版本 ${package.version}`, '-v, --version')
+program.addHelpCommand(false)
 
-program.on('--help', () => {
-  console.log(chalk.yellow(`
-  更多帮助请阅读文档: https://github.com/xstxhjh
-  `))
+let binData = getBinData()
+binData.map(bin => {
+  program
+    .option(`-${bin.key}, --${bin.key}`, `run ${bin.title}`)
 })
-
-program
-  .option('-d, --debug', 'output extra debugging')
 
 program.parse(process.argv)
 
-if (program.debug) {
-  console.log(program.opts())
-  console.log(chalk.gray('这是debug!'))
-}
+let hasBin = false
+binData.map(bin => {
+  if(program[bin.key]) {
+    runBin(bin.value)
+  }
+  hasBin = true
+})
+
+if(hasBin) return
 
 operationModeList()
 
