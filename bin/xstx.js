@@ -15,7 +15,7 @@ function runBin(bin, options = {}) {
   let encoding = 'cp936'
   let binaryEncoding = 'binary'
 
-  process.spawnSync(bin, { ...opt, encoding: binaryEncoding }, function (err, stdout, stderr) {
+  process.execSync(bin, { ...opt, encoding: binaryEncoding }, function (err, stdout, stderr) {
     let stdoutMsg = iconv.decode(Buffer.from(stdout, binaryEncoding), encoding)
     let stderrMsg = iconv.decode(Buffer.from(stderr, binaryEncoding), encoding)
     console.log(stdoutMsg, stderrMsg)
@@ -30,7 +30,7 @@ function operationModeList() {
     { name: '删除快捷命令', value: 'del' },
     { name: '执行快捷命令', value: 'run' },
     { name: '编辑快捷命令', value: 'edit' },
-    { name: '编辑命令配置项', value: 'opt' }
+    // { name: '编辑命令配置项', value: 'opt' }
   ], '请选择快捷命令库操作方式:')
     .then(answers => {
       let binData = getBinData()
@@ -39,8 +39,8 @@ function operationModeList() {
         case 'add':
           console.log(chalk.gray('-----新增-----'))
           listInput([
-            { name: '命令名称:', value: "title" },
-            { name: '系统命令:', value: "value" },
+            { name: '命令标题:', value: "title" },
+            { name: '执行命令:', value: "value" },
             { name: '命令缩写:', value: "key" }
           ]).then(bin => {
             addBin(binData, bin)
@@ -70,8 +70,17 @@ function operationModeList() {
           break;
 
         case 'run':
-          binData.map(item => {
-            item.name = `${item.title} | ${item.key} | ${item.value}`
+          let tableData = binData.map(item =>{
+            return {
+              '命令标题': item.title,
+              '命令缩写': item.key,
+              '执行命令': item.value,
+
+            }
+          })
+          console.table(tableData)
+          binData.map((item, index) => {
+            item.name = `${index} | 标题: ${item.title} | 缩写: ${item.key} | 命令: ${item.value}`
             return item
           })
           chooseList(binData, '请选择需要执行的指令:').then(res => {

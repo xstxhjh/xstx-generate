@@ -1,1 +1,5 @@
-[{"title":"pwd","value":"pwd","key":"p"},{"title":"ipconfi","value":"ipconfig","key":"ip"},{"title":"vim","value":"vim","key":"v"}]
+[
+  { "title": "目录", "value": "pwd", "key": "p" },
+  { "title": "IP 配置", "value": "ipconfig", "key": "ip" },
+  { "title": "编辑", "value": "vim ./json/all.json", "key": "v" }
+]
