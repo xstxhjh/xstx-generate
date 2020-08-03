@@ -1,6 +1,6 @@
 {
-  "name": "@xstx/instructions",
-  "version": "1.0.2",
+  "name": "commander-vite",
+  "version": "1.0.0",
   "description": "instructions",
   "main": "index.js",
   "scripts": {

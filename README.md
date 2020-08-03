@@ -6,7 +6,7 @@
 
 ## 使用方法
 
-npm i @xstx/instructions -g
+npm i commander-vite -g
 
 - 执行 xstx 提示你操作列表
 
