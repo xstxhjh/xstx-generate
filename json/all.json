@@ -2,6 +2,10 @@
   { "title": "目录", "value": "pwd", "key": "p" },
   { "title": "IP 配置", "value": "ipconfig", "key": "ip" },
   { "title": "执行pwd、IP配置", "value": "xstx -p -ip", "key": "pip" },
-  { "title": "回到上一级创建文件", "value": "mkdir hjh & cd hjh & mkdir hjh1", "key": "cm" },
+  {
+    "title": "回到上一级创建文件",
+    "value": "mkdir hjh & cd hjh & mkdir hjh1",
+    "key": "cm"
+  },
   { "title": "编辑", "value": "vim ./json/all.json", "key": "v" }
 ]

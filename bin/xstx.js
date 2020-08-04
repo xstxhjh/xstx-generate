@@ -25,6 +25,8 @@ function runBin(bin, options = {}) {
 
 function operationModeList() {
   // 操作模式列表
+  console.log('')
+  console.log('')
   return chooseList([
     { name: '新增快捷命令', value: 'add' },
     { name: '删除快捷命令', value: 'del' },
@@ -35,6 +37,7 @@ function operationModeList() {
     .then(answers => {
       let binData = getBinData()
       if (binData === false) return
+  
       switch (answers.value) {
         case 'add':
           console.log(chalk.gray('-----新增-----'))
@@ -49,11 +52,7 @@ function operationModeList() {
 
         case 'del':
           console.log(chalk.gray('-----删除-----'))
-          binData.map(item => {
-            item.name = `${item.title} | ${item.key} | ${item.value}`
-            item.value = item
-            return item
-          })
+          binData = tableBinData(binData)
           chooseList(binData, '请选择需要删除的指令:').then(res => {
             if (res.value == 'cancel') {
               operationModeList()
@@ -70,19 +69,7 @@ function operationModeList() {
           break;
 
         case 'run':
-          let tableData = binData.map(item =>{
-            return {
-              '命令标题': item.title,
-              '命令缩写': item.key,
-              '执行命令': item.value,
-
-            }
-          })
-          console.table(tableData)
-          binData.map((item, index) => {
-            item.name = `${index} | 标题: ${item.title} | 缩写: ${item.key} | 命令: ${item.value}`
-            return item
-          })
+          binData = tableBinData(binData)
           chooseList(binData, '请选择需要执行的指令:').then(res => {
             if (res.value == 'cancel') {
               operationModeList()
@@ -176,6 +163,22 @@ function editContent(data) {
     message: '编辑命令',
     name: 'content'
   }])
+}
+
+function tableBinData (binData) {
+  let tableData = binData.map(item =>{
+    return {
+      '命令标题': item.title,
+      '命令缩写': item.key,
+      '执行命令': item.value,
+
+    }
+  })
+  console.table(tableData)
+  return binData.map((item, index) => {
+    item.name = `${index} | 标题: ${item.title} | 缩写: ${item.key} | 命令: ${item.value}`
+    return item
+  })
 }
 
 module.exports = {
