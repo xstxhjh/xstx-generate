@@ -8,9 +8,9 @@
 
 npm i commander-vite -g
 
-- 执行 xstx 提示你操作列表
+- 执行 xstx 展示所有操作列表
 
-- 执行 xstx -help 会展示几个默认命令的简单操作
+- 执行 xstx -help 会展示所有命令的说明
 
 - 利用缩写形式执行你自定义的命令，如：xstx -p -ip
 
