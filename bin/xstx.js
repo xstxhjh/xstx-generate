@@ -15,6 +15,7 @@ function runBin(bin, options = {}) {
   let encoding = 'cp936'
   let binaryEncoding = 'binary'
 
+  // http://nodejs.cn/api/child_process.html#child_process_child_process_execsync_command_options
   process.execSync(bin, { ...opt, encoding: binaryEncoding }, function (err, stdout, stderr) {
     let stdoutMsg = iconv.decode(Buffer.from(stdout, binaryEncoding), encoding)
     let stderrMsg = iconv.decode(Buffer.from(stderr, binaryEncoding), encoding)
