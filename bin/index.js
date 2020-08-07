@@ -18,9 +18,9 @@ binData.map(bin => {
 program.parse(process.argv)
 
 let hasBin = false
-binData.map(bin => {
-  if(program[bin.key]) {
-    runBin(bin.value)
+binData.map(item => {
+  if(program[item.key]) {
+    runBin(item.bin, item.opts)
     hasBin = true
   }
 })

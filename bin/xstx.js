@@ -44,7 +44,7 @@ function operationModeList() {
           console.log(chalk.gray('-----新增-----'))
           listInput([
             { name: '命令标题:', value: "title" },
-            { name: '执行命令:', value: "value" },
+            { name: '执行命令:', value: "bin" },
             { name: '命令缩写:', value: "key" }
           ]).then(bin => {
             addBin(binData, bin)
@@ -53,8 +53,8 @@ function operationModeList() {
 
         case 'del':
           console.log(chalk.gray('-----删除-----'))
-          binData = tableBinData(binData)
-          chooseList(binData, '请选择需要删除的指令:').then(res => {
+          tableData = tableBinData(binData)
+          chooseList(tableData, '请选择需要删除的指令:').then(res => {
             if (res.value == 'cancel') {
               operationModeList()
               return
@@ -70,13 +70,13 @@ function operationModeList() {
           break;
 
         case 'run':
-          binData = tableBinData(binData)
-          chooseList(binData, '请选择需要执行的指令:').then(res => {
+          tableData = tableBinData(binData)
+          chooseList(tableData, '请选择需要执行的指令:').then(res => {
             if (res.value == 'cancel') {
               operationModeList()
               return
             }
-            runBin(res.value)
+            runBin(res.value.bin, res.value.opts)
           })
           break;
       }
@@ -167,18 +167,22 @@ function editContent(data) {
 }
 
 function tableBinData (binData) {
-  let tableData = binData.map(item =>{
+  let tableMsg = binData.map(item =>{
     return {
       '命令标题': item.title,
       '命令缩写': item.key,
-      '执行命令': item.value,
-
+      '执行命令': item.bin,
+      '命令配置': item.opts
     }
   })
-  console.table(tableData)
+  console.table(tableMsg)
   return binData.map((item, index) => {
-    item.name = `${index} | 标题: ${item.title} | 缩写: ${item.key} | 命令: ${item.value}`
-    return item
+
+    return {
+      ...item,
+      name: `${index} | 标题: ${item.title} | 缩写: ${item.key} | 命令: ${item.bin}`,
+      value: item
+    }
   })
 }
 
