@@ -14,12 +14,16 @@ npm i commander-vite -g
 
 - 利用缩写形式执行你自定义的命令，如：xstx -p -ip
 
-- 通过配置 opts，给命令执行添加配置，如：xstx -pt
+- 通过配置 opts，给命令执行添加配置，如：xstx -pt 
+
+```json
+{ "title": "目录", "bin": "pwd", "key": "pt", "opts": { "cwd": "C:\\" } }
+```
 
 详情可参见文档：http://nodejs.cn/api/child_process.html#child_process_child_process_execsync_command_options
 
 - 自定义命令再次组合 xstx -pip
 
-```javscript
+```json
 { "title": "执行pwd、IP配置", "value": "xstx -p -ip", "key": "pip" }
 ```
