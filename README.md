@@ -16,6 +16,8 @@ npm i commander-vite -g
 
 - 通过配置 opts，给命令执行添加配置，如：xstx -pt 
 
+配置cwd参数，可更改执行命令目录
+
 ```json
 { "title": "目录", "bin": "pwd", "key": "pt", "opts": { "cwd": "C:\\" } }
 ```
