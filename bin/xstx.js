@@ -53,8 +53,7 @@ function operationModeList() {
         case 'del':
           console.log(chalk.gray('-----删除-----'))
           tableData = tableBinData(binData)
-          chooseList(tableData, '请选择需要删除的指令(多选):').then(res => {
-            // 这里是单选 改为多选
+          chooseList(tableData, '请选择需要删除的指令:').then(res => {
             if (res.value == 'cancel') {
               operationModeList()
               return
