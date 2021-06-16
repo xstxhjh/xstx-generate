@@ -29,3 +29,11 @@ npm i commander-vite -g
 ```json
 { "title": "执行pwd、IP配置", "value": "xstx -p -ip", "key": "pip" }
 ```
+
+<!--
+  发布
+  npm login
+  npm publish
+-->
+
+
